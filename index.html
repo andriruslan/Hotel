@@ -1,23 +1,82 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Форма бронювання</title>
   <style>
-    body { font-family: sans-serif; margin: 0; padding: 1em; background: #f3f3f3; }
-    form { background: white; padding: 1em; border-radius: 8px; max-width: 600px; margin: auto; }
-    label { display: block; margin-top: 1em; }
-    input, select, textarea, button {
-      width: 100%; padding: 8px; margin-top: 4px;
-      box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;
+    body {
+      font-family: sans-serif;
+      background: #f3f3f3;
+      margin: 0;
+      padding: 1em;
     }
-    .row { display: flex; gap: 10px; }
-    .row > div { flex: 1; }
-    .hidden { display: none; }
-    button { margin-top: 1em; background: #1976d2; color: white; border: none; cursor: pointer; }
-    button.cancel { background: #888; }
-    .status { margin-top: 1em; font-weight: bold; }
+    form {
+      background: white;
+      padding: 1em;
+      border-radius: 8px;
+      max-width: 600px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-top: 1em;
+    }
+    input[type="text"],
+    input[type="tel"],
+    input[type="number"],
+    input[type="date"],
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    textarea {
+      resize: vertical;
+    }
+    .radio-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 6px;
+    }
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 0;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+    .row > div {
+      flex: 1;
+    }
+    .hidden {
+      display: none;
+    }
+    button {
+      margin-top: 1.5em;
+      padding: 10px;
+      width: 100%;
+      background: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button.cancel {
+      background: #888;
+      margin-top: 0.5em;
+    }
+    .status {
+      margin-top: 1em;
+      font-weight: bold;
+      color: green;
+    }
   </style>
 </head>
 <body>
@@ -28,79 +87,75 @@
   <div class="row">
     <div>
       <label>Дата заїзду *</label>
-      <input type="date" name="startDate" required>
+      <input type="date" name="startDate" required />
     </div>
     <div>
       <label>Дата виїзду *</label>
-      <input type="date" name="endDate" required>
+      <input type="date" name="endDate" required />
     </div>
   </div>
 
   <label>Номер готельного номера *</label>
-  <input type="text" name="roomNumber" required>
+  <input type="text" name="roomNumber" required />
 
   <label>Номер телефону *</label>
-  <input type="tel" name="phone" required>
+  <input type="tel" name="phone" required />
 
   <label>Ім’я</label>
-  <input type="text" name="name">
+  <input type="text" name="name" />
 
   <label>Сертифікат</label>
-  <select name="certificate">
-    <option value="ні">Ні</option>
-    <option value="так">Так</option>
-  </select>
+  <div class="radio-group">
+    <label><input type="radio" name="certificate" value="так" /> Так</label>
+    <label><input type="radio" name="certificate" value="ні" checked /> Ні</label>
+  </div>
 
   <label>Оплата</label>
-  <select name="paid" id="paidSelect">
-    <option value="ні">Ні</option>
-    <option value="так">Так</option>
-  </select>
+  <div class="radio-group" id="paidRadioGroup">
+    <label><input type="radio" name="paid" value="так" /> Так</label>
+    <label><input type="radio" name="paid" value="ні" checked /> Ні</label>
+  </div>
 
   <div id="paymentDetails" class="hidden">
     <label>Сума оплати</label>
-    <input type="number" name="paymentAmount">
-
+    <input type="number" name="paymentAmount" />
     <label>Хто оплатив</label>
-    <input type="text" name="whoPaid">
-
+    <input type="text" name="whoPaid" />
     <label>Коли оплатив</label>
-    <input type="date" name="whenPaid">
+    <input type="date" name="whenPaid" />
   </div>
 
   <label>Кількість додаткових місць</label>
-  <input type="number" name="extraBeds">
+  <input type="number" name="extraBeds" />
 
   <label>Дегустація</label>
-  <select name="tasting" id="tastingSelect">
-    <option value="ні">Ні</option>
-    <option value="так">Так</option>
-  </select>
+  <div class="radio-group" id="tastingRadioGroup">
+    <label><input type="radio" name="tasting" value="так" /> Так</label>
+    <label><input type="radio" name="tasting" value="ні" checked /> Ні</label>
+  </div>
 
   <div id="tastingDetails" class="hidden">
     <label>Кількість гостей на дегустацію</label>
-    <input type="number" name="tastingGuests">
+    <input type="number" name="tastingGuests" />
+    <label>Сума за дегустацію</label>
+    <input type="number" name="tastingAmount" />
   </div>
 
   <label>Опис (до 360 символів)</label>
   <textarea name="description" maxlength="360"></textarea>
 
   <label>Сума до сплати за номер</label>
-  <input type="number" name="roomAmount">
-
-  <label>Сума за дегустацію</label>
-  <input type="number" name="tastingAmount">
+  <input type="number" name="roomAmount" />
 
   <label>Загальна сума</label>
-  <input type="number" name="totalAmount">
+  <input type="number" name="totalAmount" />
 
   <label>Статус *</label>
-  <select name="status" required>
-    <option value="">-- Обрати --</option>
-    <option>Заброньовано</option>
-    <option>Підтверджено</option>
-    <option>Скасовано</option>
-  </select>
+  <div class="radio-group">
+    <label><input type="radio" name="status" value="Заброньовано" required /> Заброньовано</label>
+    <label><input type="radio" name="status" value="Підтверджено" /> Підтверджено</label>
+    <label><input type="radio" name="status" value="Скасовано" /> Скасовано</label>
+  </div>
 
   <button type="submit">Зберегти та записати</button>
   <button type="button" class="cancel" onclick="confirmReset()">Скасувати</button>
@@ -109,13 +164,6 @@
 </form>
 
 <script>
-document.getElementById("paidSelect").addEventListener("change", function() {
-  document.getElementById("paymentDetails").classList.toggle("hidden", this.value !== "так");
-});
-document.getElementById("tastingSelect").addEventListener("change", function() {
-  document.getElementById("tastingDetails").classList.toggle("hidden", this.value !== "так");
-});
-
 function confirmReset() {
   if (confirm("Очистити всі поля?")) {
     document.getElementById("bookingForm").reset();
@@ -125,29 +173,38 @@ function confirmReset() {
   }
 }
 
-document.getElementById("bookingForm").addEventListener("submit", function(e) {
+document.getElementById("paidRadioGroup").addEventListener("change", (e) => {
+  const show = document.querySelector('input[name="paid"]:checked').value === "так";
+  document.getElementById("paymentDetails").classList.toggle("hidden", !show);
+});
+
+document.getElementById("tastingRadioGroup").addEventListener("change", (e) => {
+  const show = document.querySelector('input[name="tasting"]:checked').value === "так";
+  document.getElementById("tastingDetails").classList.toggle("hidden", !show);
+});
+
+document.getElementById("bookingForm").addEventListener("submit", function (e) {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(this).entries());
 
-  // 👉 Тут вкажеш свій Apps Script URL
   const scriptUrl = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
 
   fetch(scriptUrl, {
     method: "POST",
     body: JSON.stringify(data),
-    headers: { "Content-Type": "application/json" }
+    headers: { "Content-Type": "application/json" },
   })
-  .then(res => res.text())
-  .then(msg => {
-    document.getElementById("formStatus").innerText = "✅ Дані збережено!";
-    this.reset();
-    document.getElementById("paymentDetails").classList.add("hidden");
-    document.getElementById("tastingDetails").classList.add("hidden");
-  })
-  .catch(err => {
-    console.error(err);
-    document.getElementById("formStatus").innerText = "❌ Помилка збереження";
-  });
+    .then((res) => res.text())
+    .then((msg) => {
+      document.getElementById("formStatus").innerText = "✅ Дані збережено!";
+      this.reset();
+      document.getElementById("paymentDetails").classList.add("hidden");
+      document.getElementById("tastingDetails").classList.add("hidden");
+    })
+    .catch((err) => {
+      console.error(err);
+      document.getElementById("formStatus").innerText = "❌ Помилка збереження";
+    });
 });
 </script>
 
