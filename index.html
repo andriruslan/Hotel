@@ -175,22 +175,38 @@
 </form>
 
 <script>
+document.getElementById("tastingRadioGroup").addEventListener("change", () => {
+  const show = document.querySelector('input[name="tasting"]:checked').value === "так";
+  document.getElementById("tastingDetails").classList.toggle("hidden", !show);
+  if (!show) {
+    document.querySelector('input[name="tastingAmount"]').value = "";
+    document.querySelector('input[name="tastingGuests"]').value = "";
+  }
+});
+
+function calculateTastingAmount() {
+  const guests = parseInt(document.querySelector('input[name="tastingGuests"]').value) || 0;
+  document.querySelector('input[name="tastingAmount"]').value = guests * 1500;
+}
+
 document.getElementById("bookingForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
   const formData = new FormData(this);
+  const data = Object.fromEntries(formData.entries());
 
   const scriptUrl = "https://script.google.com/macros/s/AKfycbw9mb7DHQ2ZJssocAmG0dbdUjYUgym6AHsSKOIqQdj0DIC8ipVlpGIG8SzFf92jxyRBew/exec";
 
   fetch(scriptUrl, {
     method: "POST",
-    body: formData,
+    body: JSON.stringify(data),
+    headers: { "Content-Type": "application/json" },
   })
     .then((res) => res.text())
     .then((text) => {
       document.getElementById("formStatus").innerText = "✅ Дані збережено!";
       console.log("Відповідь сервера:", text);
-      document.getElementById("bookingForm").reset();
+      this.reset();
       document.getElementById("paymentDetails").classList.add("hidden");
       document.getElementById("tastingDetails").classList.add("hidden");
     })
@@ -200,6 +216,7 @@ document.getElementById("bookingForm").addEventListener("submit", function (e) {
     });
 });
 </script>
+
 
 </body>
 </html>
