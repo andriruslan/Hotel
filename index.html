@@ -241,11 +241,27 @@ document.getElementById("bookingForm").addEventListener("submit", function (e) {
 
  const scriptUrl = "https://script.google.com/macros/s/AKfycbwvsK_nsgkkjtjZnzLhB2wcvrEMyZA1UgEO5XUoJ2qlgNhjWsqum8FcCV7jk-rzzWkHVg/exec";
 
-  fetch(scriptUrl, {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: { "Content-Type": "application/json" },
+const formData = new FormData();
+for (const key in data) {
+  formData.append(key, data[key]);
+}
+
+fetch(scriptUrl, {
+  method: "POST",
+  body: formData,
+})
+  .then((res) => res.text())
+  .then(() => {
+    document.getElementById("formStatus").innerText = "✅ Дані збережено!";
+    document.getElementById("bookingForm").reset();
+    document.getElementById("paymentDetails").classList.add("hidden");
+    document.getElementById("tastingDetails").classList.add("hidden");
   })
+  .catch((err) => {
+    console.error(err);
+    document.getElementById("formStatus").innerText = "❌ Помилка збереження";
+  });
+
     .then((res) => res.text())
     .then(() => {
       document.getElementById("formStatus").innerText = "✅ Дані збережено!";
