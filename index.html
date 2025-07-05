@@ -112,7 +112,7 @@
   <label>Номер телефону *</label>
   <input type="tel" name="phone" required />
 
-  <label>Ім’я1</label>
+  <label>Ім’я</label>
   <input type="text" name="name" />
 
   <label>Сертифікат</label>
@@ -175,97 +175,22 @@
 </form>
 
 <script>
-function confirmReset() {
-  if (confirm("Очистити всі поля?")) {
-    document.getElementById("bookingForm").reset();
-    document.getElementById("paymentDetails").classList.add("hidden");
-    document.getElementById("tastingDetails").classList.add("hidden");
-    document.getElementById("formStatus").innerText = "";
-    document.getElementById("searchResult").classList.add("hidden");
-  }
-}
-
-document.getElementById("paidRadioGroup").addEventListener("change", () => {
-  const show = document.querySelector('input[name="paid"]:checked').value === "так";
-  document.getElementById("paymentDetails").classList.toggle("hidden", !show);
-});
-
-document.getElementById("tastingRadioGroup").addEventListener("change", () => {
-  const show = document.querySelector('input[name="tasting"]:checked').value === "так";
-  document.getElementById("tastingDetails").classList.toggle("hidden", !show);
-  if (!show) {
-    document.querySelector('input[name="tastingAmount"]').value = "";
-    document.querySelector('input[name="tastingGuests"]').value = "";
-  }
-});
-
-function calculateTastingAmount() {
-  const guests = parseInt(document.querySelector('input[name="tastingGuests"]').value) || 0;
-  document.querySelector('input[name="tastingAmount"]').value = guests * 1500;
-}
-
-function searchByPhone() {
-  const phone = document.getElementById("searchPhone").value.trim();
-  const resultBox = document.getElementById("searchResult");
-  resultBox.textContent = "Очікуйте... Пошук даних...";
-  resultBox.classList.remove("hidden");
-  resultBox.style.color = "#555";
-
-const scriptUrl = "https://script.google.com/macros/s/AKfycbwvsK_nsgkkjtjZnzLhB2wcvrEMyZA1UgEO5XUoJ2qlgNhjWsqum8FcCV7jk-rzzWkHVg/exec?searchPhone=" + encodeURIComponent(phone);
-
-  fetch(scriptUrl)
-    .then((res) => res.json())
-    .then((data) => {
-      if (data && data.found) {
-        for (const key in data.values) {
-          const field = document.querySelector(`[name="${key}"]`);
-          if (field) field.value = data.values[key];
-        }
-        resultBox.textContent = "✅ Дані знайдено й заповнено";
-        resultBox.style.color = "green";
-      } else {
-        resultBox.textContent = "Дані по вказаному номеру відсутні";
-        resultBox.style.color = "#c00";
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      resultBox.textContent = "⚠️ Помилка при пошуку";
-      resultBox.style.color = "#c00";
-    });
-}
-
 document.getElementById("bookingForm").addEventListener("submit", function (e) {
   e.preventDefault();
-  const data = Object.fromEntries(new FormData(this).entries());
 
- const scriptUrl = "https://script.google.com/macros/s/AKfycbwvsK_nsgkkjtjZnzLhB2wcvrEMyZA1UgEO5XUoJ2qlgNhjWsqum8FcCV7jk-rzzWkHVg/exec";
+  const formData = new FormData(this);
 
-const formData = new FormData();
-for (const key in data) {
-  formData.append(key, data[key]);
-}
+  const scriptUrl = "https://script.google.com/macros/s/AKfycbw9mb7DHQ2ZJssocAmG0dbdUjYUgym6AHsSKOIqQdj0DIC8ipVlpGIG8SzFf92jxyRBew/exec";
 
-fetch(scriptUrl, {
-  method: "POST",
-  body: formData,
-})
-  .then((res) => res.text())
-  .then(() => {
-    document.getElementById("formStatus").innerText = "✅ Дані збережено!";
-    document.getElementById("bookingForm").reset();
-    document.getElementById("paymentDetails").classList.add("hidden");
-    document.getElementById("tastingDetails").classList.add("hidden");
+  fetch(scriptUrl, {
+    method: "POST",
+    body: formData,
   })
-  .catch((err) => {
-    console.error(err);
-    document.getElementById("formStatus").innerText = "❌ Помилка збереження";
-  });
-
     .then((res) => res.text())
-    .then(() => {
+    .then((text) => {
       document.getElementById("formStatus").innerText = "✅ Дані збережено!";
-      this.reset();
+      console.log("Відповідь сервера:", text);
+      document.getElementById("bookingForm").reset();
       document.getElementById("paymentDetails").classList.add("hidden");
       document.getElementById("tastingDetails").classList.add("hidden");
     })
