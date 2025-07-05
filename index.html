@@ -195,7 +195,7 @@ document.getElementById("bookingForm").addEventListener("submit", function (e) {
   const formData = new FormData(this);
   const data = Object.fromEntries(formData.entries());
 
-  const scriptUrl = "https://script.google.com/macros/s/AKfycbw9mb7DHQ2ZJssocAmG0dbdUjYUgym6AHsSKOIqQdj0DIC8ipVlpGIG8SzFf92jxyRBew/exec";
+  const scriptUrl = "https://script.google.com/macros/s/AKfycbwvsK_nsgkkjtjZnzLhB2wcvrEMyZA1UgEO5XUoJ2qlgNhjWsqum8FcCV7jk-rzzWkHVg/exec";
 
   fetch(scriptUrl, {
     method: "POST",
