@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Форма бронювання</title>
   <style>
     body {
@@ -76,12 +76,24 @@
       font-weight: bold;
       color: green;
     }
+    .error-message {
+      color: #c00;
+      font-weight: bold;
+      margin-top: 0.5em;
+    }
   </style>
 </head>
 <body>
 
 <form id="bookingForm">
   <h2>Бронювання готелю</h2>
+
+  <label>Пошук по телефону</label>
+  <div class="row">
+    <div><input type="tel" id="searchPhone" /></div>
+    <div><button type="button" onclick="searchByPhone()">Пошук</button></div>
+  </div>
+  <div id="searchResult" class="error-message hidden"></div>
 
   <div class="row">
     <div>
@@ -135,9 +147,9 @@
 
   <div id="tastingDetails" class="hidden">
     <label>Кількість гостей на дегустацію</label>
-    <input type="tel" name="tastingGuests" inputmode="numeric" pattern="[0-9]*" />
-    <label>Сума за дегустацію</label>
-    <input type="tel" name="tastingAmount" inputmode="numeric" pattern="[0-9]*" />
+    <input type="tel" name="tastingGuests" inputmode="numeric" pattern="[0-9]*" oninput="calculateTastingAmount()" />
+    <label>Сума за дегустацію, грн</label>
+    <input type="tel" name="tastingAmount" readonly />
   </div>
 
   <label>Опис (до 360 символів)</label>
@@ -169,6 +181,7 @@ function confirmReset() {
     document.getElementById("paymentDetails").classList.add("hidden");
     document.getElementById("tastingDetails").classList.add("hidden");
     document.getElementById("formStatus").innerText = "";
+    document.getElementById("searchResult").classList.add("hidden");
   }
 }
 
@@ -180,7 +193,47 @@ document.getElementById("paidRadioGroup").addEventListener("change", () => {
 document.getElementById("tastingRadioGroup").addEventListener("change", () => {
   const show = document.querySelector('input[name="tasting"]:checked').value === "так";
   document.getElementById("tastingDetails").classList.toggle("hidden", !show);
+  if (!show) {
+    document.querySelector('input[name="tastingAmount"]').value = "";
+    document.querySelector('input[name="tastingGuests"]').value = "";
+  }
 });
+
+function calculateTastingAmount() {
+  const guests = parseInt(document.querySelector('input[name="tastingGuests"]').value) || 0;
+  document.querySelector('input[name="tastingAmount"]').value = guests * 1500;
+}
+
+function searchByPhone() {
+  const phone = document.getElementById("searchPhone").value.trim();
+  const resultBox = document.getElementById("searchResult");
+  resultBox.textContent = "Очікуйте... Пошук даних...";
+  resultBox.classList.remove("hidden");
+  resultBox.style.color = "#555";
+
+  const scriptUrl = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?searchPhone=" + encodeURIComponent(phone);
+
+  fetch(scriptUrl)
+    .then((res) => res.json())
+    .then((data) => {
+      if (data && data.found) {
+        for (const key in data.values) {
+          const field = document.querySelector(`[name="${key}"]`);
+          if (field) field.value = data.values[key];
+        }
+        resultBox.textContent = "✅ Дані знайдено й заповнено";
+        resultBox.style.color = "green";
+      } else {
+        resultBox.textContent = "Дані по вказаному номеру відсутні";
+        resultBox.style.color = "#c00";
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      resultBox.textContent = "⚠️ Помилка при пошуку";
+      resultBox.style.color = "#c00";
+    });
+}
 
 document.getElementById("bookingForm").addEventListener("submit", function (e) {
   e.preventDefault();
