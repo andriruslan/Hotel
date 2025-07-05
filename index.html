@@ -211,7 +211,7 @@ function searchByPhone() {
   resultBox.classList.remove("hidden");
   resultBox.style.color = "#555";
 
-  const scriptUrl = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?searchPhone=" + encodeURIComponent(phone);
+  const scriptUrl = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbzQBb8714jdmIXj9BzU_KbTTYwpokLNEQ8I6NNx5ZvP_fWdKHE9IazwVbQj19O3to3yaQ/exec/exec?searchPhone=" + encodeURIComponent(phone);
 
   fetch(scriptUrl)
     .then((res) => res.json())
@@ -239,7 +239,7 @@ document.getElementById("bookingForm").addEventListener("submit", function (e) {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(this).entries());
 
-  const scriptUrl = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+  const scriptUrl = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbzQBb8714jdmIXj9BzU_KbTTYwpokLNEQ8I6NNx5ZvP_fWdKHE9IazwVbQj19O3to3yaQ/exec/exec";
 
   fetch(scriptUrl, {
     method: "POST",
