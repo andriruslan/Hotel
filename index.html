@@ -175,48 +175,97 @@
 </form>
 
 <script>
-document.getElementById("tastingRadioGroup").addEventListener("change", () => {
-  const show = document.querySelector('input[name="tasting"]:checked').value === "так";
-  document.getElementById("tastingDetails").classList.toggle("hidden", !show);
-  if (!show) {
-    document.querySelector('input[name="tastingAmount"]').value = "";
-    document.querySelector('input[name="tastingGuests"]').value = "";
+  // Показати/сховати блок оплати
+  document.getElementById("paidRadioGroup").addEventListener("change", () => {
+    const show = document.querySelector('input[name="paid"]:checked').value === "так";
+    document.getElementById("paymentDetails").classList.toggle("hidden", !show);
+    if (!show) {
+      document.querySelector('input[name="paymentAmount"]').value = "";
+      document.querySelector('input[name="whoPaid"]').value = "";
+      document.querySelector('input[name="whenPaid"]').value = "";
+    }
+  });
+
+  // Показати/сховати блок дегустації
+  document.getElementById("tastingRadioGroup").addEventListener("change", () => {
+    const show = document.querySelector('input[name="tasting"]:checked').value === "так";
+    document.getElementById("tastingDetails").classList.toggle("hidden", !show);
+    if (!show) {
+      document.querySelector('input[name="tastingAmount"]').value = "";
+      document.querySelector('input[name="tastingGuests"]').value = "";
+    }
+  });
+
+  // Обрахунок суми дегустації
+  function calculateTastingAmount() {
+    const guests = parseInt(document.querySelector('input[name="tastingGuests"]').value) || 0;
+    document.querySelector('input[name="tastingAmount"]').value = guests * 1500;
   }
-});
 
-function calculateTastingAmount() {
-  const guests = parseInt(document.querySelector('input[name="tastingGuests"]').value) || 0;
-  document.querySelector('input[name="tastingAmount"]').value = guests * 1500;
-}
-
-document.getElementById("bookingForm").addEventListener("submit", function (e) {
-  e.preventDefault();
-
-  const formData = new FormData(this);
-  const data = Object.fromEntries(formData.entries());
-
-  const scriptUrl = "https://script.google.com/macros/s/AKfycbxxvzcZuvMXA2OYQj55TFkhd0WuxpiZZ4a4eN4BRSmrDxfS18Cd9TY2i1tYFP8z2i4ukA/exec";
-
-  fetch(scriptUrl, {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: { "Content-Type": "application/json" },
-  })
-    .then((res) => res.text())
-    .then((text) => {
-      document.getElementById("formStatus").innerText = "✅ Дані збережено!";
-      console.log("Відповідь сервера:", text);
-      this.reset();
+  // Скидання форми
+  function confirmReset() {
+    if (confirm("Ви дійсно хочете скасувати? Всі введені дані будуть втрачені.")) {
+      document.getElementById("bookingForm").reset();
       document.getElementById("paymentDetails").classList.add("hidden");
       document.getElementById("tastingDetails").classList.add("hidden");
-    })
-    .catch((err) => {
-      console.error(err);
-      document.getElementById("formStatus").innerText = "❌ Помилка збереження";
-    });
-});
-</script>
+      document.getElementById("formStatus").innerText = "";
+      document.getElementById("searchResult").classList.add("hidden");
+      document.getElementById("searchResult").innerText = "";
+    }
+  }
 
+  // Відправка форми
+  document.getElementById("bookingForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    const params = new URLSearchParams();
+
+    for (const pair of formData.entries()) {
+      params.append(pair[0], pair[1]);
+    }
+
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbxxvzcZuvMXA2OYQj55TFkhd0WuxpiZZ4a4eN4BRSmrDxfS18Cd9TY2i1tYFP8z2i4ukA/exec";
+
+    fetch(scriptUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+      },
+      body: params.toString(),
+    })
+      .then(res => res.text())
+      .then(text => {
+        document.getElementById("formStatus").innerText = "✅ Дані збережено!";
+        this.reset();
+        document.getElementById("paymentDetails").classList.add("hidden");
+        document.getElementById("tastingDetails").classList.add("hidden");
+        document.getElementById("searchResult").classList.add("hidden");
+        document.getElementById("searchResult").innerText = "";
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById("formStatus").innerText = "❌ Помилка збереження";
+      });
+  });
+
+  // Функція пошуку по телефону (приклад, якщо є)
+  function searchByPhone() {
+    const phone = document.getElementById("searchPhone").value.trim();
+    if (!phone) {
+      showSearchResult("Введіть номер телефону для пошуку");
+      return;
+    }
+    // Тут можна додати логіку пошуку в таблиці через Apps Script API або інші методи
+    showSearchResult("Пошук поки не реалізовано");
+  }
+
+  function showSearchResult(msg) {
+    const el = document.getElementById("searchResult");
+    el.innerText = msg;
+    el.classList.remove("hidden");
+  }
+</script>
 
 </body>
 </html>
