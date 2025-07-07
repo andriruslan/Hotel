@@ -3,98 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Форма бронювання</title>
+  <title>Бронювання готелю</title>
   <style>
-    body {
-      font-family: sans-serif;
-      background: #f3f3f3;
-      margin: 0;
-      padding: 1em;
-    }
-    form {
-      background: white;
-      padding: 1em;
-      border-radius: 8px;
-      max-width: 600px;
-      margin: auto;
-    }
-    label {
-      display: block;
-      margin-top: 1em;
-    }
-    input[type="text"],
-    input[type="tel"],
-    input[type="date"],
-    textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    textarea {
-      resize: vertical;
-    }
-    .radio-group {
-      display: flex;
-      gap: 15px;
-      margin-top: 6px;
-    }
-    .radio-group label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      margin-top: 0;
-    }
-    .row {
-      display: flex;
-      gap: 10px;
-    }
-    .row > div {
-      flex: 1;
-    }
-    .hidden {
-      display: none;
-    }
-    button {
-      margin-top: 1.5em;
-      padding: 10px;
-      width: 100%;
-      background: #1976d2;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    button.cancel {
-      background: #888;
-      margin-top: 0.5em;
-    }
-    .status {
-      margin-top: 1em;
-      font-weight: bold;
-      color: green;
-    }
-    .error-message {
-      color: #c00;
-      font-weight: bold;
-      margin-top: 0.5em;
-    }
+    body { font-family: sans-serif; background: #f3f3f3; padding: 1em; margin: 0; }
+    form { background: #fff; border-radius: 8px; padding: 1em; max-width: 600px; margin: auto; }
+    label { display: block; margin-top: 1em; }
+    input, textarea { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    .radio-group { display: flex; gap: 15px; margin-top: 6px; }
+    .radio-group label { display: flex; align-items: center; gap: 5px; margin: 0; }
+    .row { display: flex; gap: 10px; }
+    .row > div { flex: 1; }
+    .hidden { display: none; }
+    button { margin-top: 1.5em; padding: 10px; width: 100%; background: #1976d2; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    button.cancel { background: #888; }
+    .status { margin-top: 1em; font-weight: bold; color: green; }
+    .error-message { color: #c00; font-weight: bold; margin-top: 0.5em; }
   </style>
 </head>
 <body>
 
-<form id="bookingForm" action="https://script.google.com/macros/s/AKfycbx829pZbIhhGfNTVdaLcfF8VZUm6avK6YC5MWrV7jYjJY9UqRrUUA0JxcruUd-PajWfpQ/exec" method="POST" target="hidden_iframe">
-
+<form id="bookingForm">
   <h2>Бронювання готелю</h2>
-
-  <label>Пошук по телефону</label>
-  <div class="row">
-    <div><input type="tel" id="searchPhone" /></div>
-    <div><button type="button" onclick="searchByPhone()">Пошук</button></div>
-  </div>
-  <div id="searchResult" class="error-message hidden"></div>
 
   <div class="row">
     <div>
@@ -107,7 +36,7 @@
     </div>
   </div>
 
-  <label>Номер готельного номера1 *</label>
+  <label>Номер готельного номера *</label>
   <input type="text" name="roomNumber" required />
 
   <label>Номер телефону *</label>
@@ -130,7 +59,7 @@
 
   <div id="paymentDetails" class="hidden">
     <label>Сума оплати</label>
-    <input type="tel" name="paymentAmount" inputmode="numeric" pattern="[0-9]*" />
+    <input type="tel" name="paymentAmount" inputmode="numeric" />
     <label>Хто оплатив</label>
     <input type="text" name="whoPaid" />
     <label>Коли оплатив</label>
@@ -138,7 +67,7 @@
   </div>
 
   <label>Кількість додаткових місць</label>
-  <input type="tel" name="extraBeds" inputmode="numeric" pattern="[0-9]*" />
+  <input type="tel" name="extraBeds" inputmode="numeric" />
 
   <label>Дегустація</label>
   <div class="radio-group" id="tastingRadioGroup">
@@ -153,14 +82,14 @@
     <input type="tel" name="tastingAmount" readonly />
   </div>
 
-  <label>Опис (до 360 символів)</label>
+  <label>Опис</label>
   <textarea name="description" maxlength="360"></textarea>
 
-  <label>Сума до сплати за номер</label>
-  <input type="tel" name="roomAmount" inputmode="numeric" pattern="[0-9]*" />
+  <label>Сума за номер</label>
+  <input type="tel" name="roomAmount" inputmode="numeric" />
 
   <label>Загальна сума</label>
-  <input type="tel" name="totalAmount" inputmode="numeric" pattern="[0-9]*" />
+  <input type="tel" name="totalAmount" inputmode="numeric" />
 
   <label>Статус *</label>
   <div class="radio-group">
@@ -170,104 +99,51 @@
   </div>
 
   <button type="submit">Зберегти та записати</button>
-  <button type="button" class="cancel" onclick="confirmReset()">Скасувати</button>
-
+  <button type="button" class="cancel" onclick="document.getElementById('bookingForm').reset()">Скасувати</button>
   <div id="formStatus" class="status"></div>
 </form>
 
 <script>
-  // Показати/сховати блок оплати
-  document.getElementById("paidRadioGroup").addEventListener("change", () => {
-    const show = document.querySelector('input[name="paid"]:checked').value === "так";
-    document.getElementById("paymentDetails").classList.toggle("hidden", !show);
-    if (!show) {
-      document.querySelector('input[name="paymentAmount"]').value = "";
-      document.querySelector('input[name="whoPaid"]').value = "";
-      document.querySelector('input[name="whenPaid"]').value = "";
-    }
-  });
+const scriptURL = 'https://script.google.com/macros/s/AKfycbxxvzcZuvMXA2OYQj55TFkhd0WuxpiZZ4a4eN4BRSmrDxfS18Cd9TY2i1tYFP8z2i4ukA/exec';
 
-  // Показати/сховати блок дегустації
-  document.getElementById("tastingRadioGroup").addEventListener("change", () => {
-    const show = document.querySelector('input[name="tasting"]:checked').value === "так";
-    document.getElementById("tastingDetails").classList.toggle("hidden", !show);
-    if (!show) {
-      document.querySelector('input[name="tastingAmount"]').value = "";
-      document.querySelector('input[name="tastingGuests"]').value = "";
-    }
-  });
+document.getElementById("paidRadioGroup").addEventListener("change", () => {
+  const show = document.querySelector('input[name="paid"]:checked').value === "так";
+  document.getElementById("paymentDetails").classList.toggle("hidden", !show);
+});
 
-  // Обрахунок суми дегустації
-  function calculateTastingAmount() {
-    const guests = parseInt(document.querySelector('input[name="tastingGuests"]').value) || 0;
-    document.querySelector('input[name="tastingAmount"]').value = guests * 1500;
+document.getElementById("tastingRadioGroup").addEventListener("change", () => {
+  const show = document.querySelector('input[name="tasting"]:checked').value === "так";
+  document.getElementById("tastingDetails").classList.toggle("hidden", !show);
+  if (!show) {
+    document.querySelector('input[name="tastingGuests"]').value = "";
+    document.querySelector('input[name="tastingAmount"]').value = "";
   }
+});
 
-  // Скидання форми
-  function confirmReset() {
-    if (confirm("Ви дійсно хочете скасувати? Всі введені дані будуть втрачені.")) {
-      document.getElementById("bookingForm").reset();
+function calculateTastingAmount() {
+  const guests = parseInt(document.querySelector('input[name="tastingGuests"]').value) || 0;
+  document.querySelector('input[name="tastingAmount"]').value = guests * 1500;
+}
+
+document.getElementById("bookingForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+  fetch(scriptURL, {
+    method: 'POST',
+    body: formData
+  })
+    .then(res => res.text())
+    .then(text => {
+      document.getElementById("formStatus").innerText = "✅ Дані збережено!";
+      this.reset();
       document.getElementById("paymentDetails").classList.add("hidden");
       document.getElementById("tastingDetails").classList.add("hidden");
-      document.getElementById("formStatus").innerText = "";
-      document.getElementById("searchResult").classList.add("hidden");
-      document.getElementById("searchResult").innerText = "";
-    }
-  }
-
-  // Відправка форми
-/*  document.getElementById("bookingForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const formData = new FormData(this);
-    const params = new URLSearchParams();
-
-    for (const pair of formData.entries()) {
-      params.append(pair[0], pair[1]);
-    }
-
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbxxvzcZuvMXA2OYQj55TFkhd0WuxpiZZ4a4eN4BRSmrDxfS18Cd9TY2i1tYFP8z2i4ukA/exec";
-
-    fetch(scriptUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
-      },
-      body: params.toString(),
     })
-      .then(res => res.text())
-      .then(text => {
-        document.getElementById("formStatus").innerText = "✅ Дані збережено!";
-        this.reset();
-        document.getElementById("paymentDetails").classList.add("hidden");
-        document.getElementById("tastingDetails").classList.add("hidden");
-        document.getElementById("searchResult").classList.add("hidden");
-        document.getElementById("searchResult").innerText = "";
-      })
-      .catch(err => {
-        console.error(err);
-        document.getElementById("formStatus").innerText = "❌ Помилка збереження";
-      });
-  });*/
-
-  // Функція пошуку по телефону (приклад, якщо є)
-  function searchByPhone() {
-    const phone = document.getElementById("searchPhone").value.trim();
-    if (!phone) {
-      showSearchResult("Введіть номер телефону для пошуку");
-      return;
-    }
-    // Тут можна додати логіку пошуку в таблиці через Apps Script API або інші методи
-    showSearchResult("Пошук поки не реалізовано");
-  }
-
-  function showSearchResult(msg) {
-    const el = document.getElementById("searchResult");
-    el.innerText = msg;
-    el.classList.remove("hidden");
-  }
+    .catch(err => {
+      document.getElementById("formStatus").innerText = "❌ Помилка збереження";
+      console.error(err);
+    });
+});
 </script>
-<iframe name="hidden_iframe" style="display:none;"></iframe>
-
 </body>
 </html>
