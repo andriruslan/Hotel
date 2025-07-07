@@ -103,47 +103,31 @@
   <div id="formStatus" class="status"></div>
 </form>
 
-<script>
-const scriptURL = 'https://script.google.com/macros/s/AKfycbxxvzcZuvMXA2OYQj55TFkhd0WuxpiZZ4a4eN4BRSmrDxfS18Cd9TY2i1tYFP8z2i4ukA/exec';
+ <script>
+  document.getElementById("bookingForm").addEventListener("submit", function (e) {
+    e.preventDefault();
 
-document.getElementById("paidRadioGroup").addEventListener("change", () => {
-  const show = document.querySelector('input[name="paid"]:checked').value === "так";
-  document.getElementById("paymentDetails").classList.toggle("hidden", !show);
-});
+    const formData = new FormData(this);
 
-document.getElementById("tastingRadioGroup").addEventListener("change", () => {
-  const show = document.querySelector('input[name="tasting"]:checked').value === "так";
-  document.getElementById("tastingDetails").classList.toggle("hidden", !show);
-  if (!show) {
-    document.querySelector('input[name="tastingGuests"]').value = "";
-    document.querySelector('input[name="tastingAmount"]').value = "";
-  }
-});
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbxxvzcZuvMXA2OYQj55TFkhd0WuxpiZZ4a4eN4BRSmrDxfS18Cd9TY2i1tYFP8z2i4ukA/exec";
 
-function calculateTastingAmount() {
-  const guests = parseInt(document.querySelector('input[name="tastingGuests"]').value) || 0;
-  document.querySelector('input[name="tastingAmount"]').value = guests * 1500;
-}
-
-document.getElementById("bookingForm").addEventListener("submit", function (e) {
-  e.preventDefault();
-  const formData = new FormData(this);
-  fetch(scriptURL, {
-    method: 'POST',
-    body: formData
-  })
-    .then(res => res.text())
-    .then(text => {
-      document.getElementById("formStatus").innerText = "✅ Дані збережено!";
-      this.reset();
-      document.getElementById("paymentDetails").classList.add("hidden");
-      document.getElementById("tastingDetails").classList.add("hidden");
+    fetch(scriptUrl, {
+      method: "POST",
+      body: formData
     })
-    .catch(err => {
-      document.getElementById("formStatus").innerText = "❌ Помилка збереження";
-      console.error(err);
-    });
-});
-</script>
+      .then((res) => res.text())
+      .then((text) => {
+        document.getElementById("formStatus").innerText = "✅ Дані збережено!";
+        console.log("📩 Відповідь сервера:", text);
+        this.reset();
+        document.getElementById("paymentDetails").classList.add("hidden");
+        document.getElementById("tastingDetails").classList.add("hidden");
+      })
+      .catch((err) => {
+        console.error("❌ ПОМИЛКА:", err);
+        document.getElementById("formStatus").innerText = "❌ Помилка збереження";
+      });
+  });
+  </script>
 </body>
 </html>
