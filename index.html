@@ -85,7 +85,8 @@
 </head>
 <body>
 
-<form id="bookingForm">
+<form id="bookingForm" action="https://script.google.com/macros/s/ТВОЙ_СКРИПТ_ID/exec" method="POST" target="hidden_iframe">
+
   <h2>Бронювання готелю</h2>
 
   <label>Пошук по телефону</label>
@@ -215,7 +216,7 @@
   }
 
   // Відправка форми
-  document.getElementById("bookingForm").addEventListener("submit", function (e) {
+/*  document.getElementById("bookingForm").addEventListener("submit", function (e) {
     e.preventDefault();
 
     const formData = new FormData(this);
@@ -247,7 +248,7 @@
         console.error(err);
         document.getElementById("formStatus").innerText = "❌ Помилка збереження";
       });
-  });
+  });*/
 
   // Функція пошуку по телефону (приклад, якщо є)
   function searchByPhone() {
@@ -266,6 +267,7 @@
     el.classList.remove("hidden");
   }
 </script>
+<iframe name="hidden_iframe" style="display:none;"></iframe>
 
 </body>
 </html>
