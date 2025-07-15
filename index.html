@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Бронювання готелю</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f3f3f3;
+      margin: 0;
+      padding: 1em;
+    }
+    form {
+      background: white;
+      padding: 1em;
+      border-radius: 8px;
+      max-width: 600px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-top: 1em;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      box-sizing: border-box;
+      border-radius: 4px;
+    }
+    textarea {
+      resize: vertical;
+    }
+    .radio-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 6px;
+    }
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .hidden {
+      display: none;
+    }
+    button {
+      background: #1976d2;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button.cancel {
+      background: #888;
+      margin-top: 0.5em;
+    }
+    .status {
+      margin-top: 1em;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+<form id="bookingForm">
+  <h2>Бронювання готелю</h2>
+
+  <label>Дата заїзду *</label>
+  <input type="date" name="startDate" required />
+
+  <label>Дата виїзду *</label>
+  <input type="date" name="endDate" required />
+
+  <label>Номер готельного номера *</label>
+  <input type="text" name="roomNumber" required />
+
+  <label>Номер телефону *</label>
+  <input type="tel" name="phone" required />
+
+  <label>Ім’я</label>
+  <input type="text" name="name" />
+
+  <label>Сертифікат</label>
+  <div class="radio-group">
+    <label><input type="radio" name="certificate" value="так" /> Так</label>
+    <label><input type="radio" name="certificate" value="ні" checked /> Ні</label>
+  </div>
+
+  <label>Оплата</label>
+  <div class="radio-group">
+    <label><input type="radio" name="paid" value="так" /> Так</label>
+    <label><input type="radio" name="paid" value="ні" checked /> Ні</label>
+  </div>
+
+  <label>Дегустація</label>
+  <div class="radio-group" id="tastingRadioGroup">
+    <label><input type="radio" name="tasting" value="так" /> Так</label>
+    <label><input type="radio" name="tasting" value="ні" checked /> Ні</label>
+  </div>
+
+  <div id="tastingDetails" class="hidden">
+    <label>Кількість гостей на дегустацію</label>
+    <input type="tel" name="tastingGuests" inputmode="numeric" oninput="calculateTastingAmount()" />
+    <label>Сума за дегустацію, грн</label>
+    <input type="tel" name="tastingAmount" readonly />
+  </div>
+
+  <label>Опис</label>
+  <textarea name="description" maxlength="360"></textarea>
+
+  <label>Сума до сплати</label>
+  <input type="tel" name="totalAmount" inputmode="numeric" />
+
+  <label>Статус *</label>
+  <div class="radio-group">
+    <label><input type="radio" name="status" value="Заброньовано" required /> Заброньовано</label>
+    <label><input type="radio" name="status" value="Підтверджено" /> Підтверджено</label>
+    <label><input type="radio" name="status" value="Скасовано" /> Скасовано</label>
+  </div>
+
+  <button type="submit">Зберегти та записати</button>
+  <button type="button" class="cancel" onclick="document.getElementById('bookingForm').reset()">Скасувати</button>
+
+  <div id="formStatus" class="status"></div>
+</form>
+
+<script>
+  const tastingGroup = document.getElementById("tastingRadioGroup");
+  tastingGroup.addEventListener("change", () => {
+    const show = document.querySelector('input[name="tasting"]:checked').value === "так";
+    document.getElementById("tastingDetails").classList.toggle("hidden", !show);
+    if (!show) {
+      document.querySelector('input[name="tastingAmount"]').value = "";
+      document.querySelector('input[name="tastingGuests"]').value = "";
+    }
+  });
+
+  function calculateTastingAmount() {
+    const guests = parseInt(document.querySelector('input[name="tastingGuests"]').value) || 0;
+    document.querySelector('input[name="tastingAmount"]').value = guests * 1500;
+  }
+
+  document.getElementById("bookingForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+
+    fetch("https://script.google.com/macros/s/AKfycbxxvzcZuvMXA2OYQj55TFkhd0WuxpiZZ4a4eN4BRSmrDxfS18Cd9TY2i1tYFP8z2i4ukA/exec", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" },
+    })
+    .then((res) => res.text())
+    .then((text) => {
+      document.getElementById("formStatus").innerText = "✅ Дані збережено!";
+      this.reset();
+      document.getElementById("tastingDetails").classList.add("hidden");
+    })
+    .catch((err) => {
+      console.error(err);
+      document.getElementById("formStatus").innerText = "❌ Помилка збереження";
+    });
+  });
+</script>
+
+</body>
+</html>
