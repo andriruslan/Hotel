@@ -2,98 +2,30 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Бронювання готелю</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #f3f3f3;
-      padding: 1em;
-    }
-    form {
-      background: white;
-      padding: 1em;
-      border-radius: 8px;
-      max-width: 600px;
-      margin: auto;
-    }
-    label {
-      display: block;
-      margin-top: 1em;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-      box-sizing: border-box;
-    }
-    .radio-group {
-      display: flex;
-      gap: 10px;
-      margin-top: 4px;
-    }
-    .row {
-      display: flex;
-      gap: 10px;
-    }
-    .row > div {
-      flex: 1;
-    }
-    button {
-      margin-top: 1.5em;
-      padding: 10px;
-      width: 100%;
-      background: #1976d2;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  </style>
+  <title>Бронювання</title>
+  <script>
+    // Глобальна змінна
+    var submitted = false;
+  </script>
 </head>
 <body>
 
-<script>
-  var submitted = false;
-</script>
-
 <form id="bookingForm"
       method="POST"
-      action="https://script.google.com/macros/s/AKfycbwQu8Apc5Dsu4DMKJ4-H4726wVKZHRtwHLY-UjSWfP4xdWNZiKeze-khxcKjguiGWfYZg/exec"
+      action="https://script.google.com/macros/s/ВАШ_ID/exec"
       target="hidden_iframe"
-      onsubmit="submitted = true; document.getElementById('formStatus').innerText = '⏳ Надсилаємо...';">
-
-  <h2>Бронювання готелю</h2>
-
-  <label>Дата заїзду *</label>
-  <input type="date" name="startDate" required />
-
-  <label>Дата виїзду *</label>
-  <input type="date" name="endDate" required />
-
-  <label>Номер кімнати *</label>
-  <input type="text" name="roomNumber" required />
-
-  <label>Телефон *</label>
-  <input type="tel" name="phone" required />
-
-  <label>Ім’я</label>
-  <input type="text" name="name" />
-
-  <label>Статус</label>
-  <div class="radio-group">
-    <label><input type="radio" name="status" value="Заброньовано" checked /> Заброньовано</label>
-    <label><input type="radio" name="status" value="Підтверджено" /> Підтверджено</label>
-    <label><input type="radio" name="status" value="Скасовано" /> Скасовано</label>
-  </div>
-
-  <button type="submit">Зберегти та записати</button>
-
-  <div id="formStatus" style="margin-top: 1em; font-weight: bold; color: green;"></div>
+      onsubmit="submitted=true; document.getElementById('formStatus').innerText='⏳ Надсилаємо...';">
+  <!-- Ваші поля форми тут -->
+  <label>Ім'я</label>
+  <input type="text" name="name" required />
+  
+  <button type="submit">Відправити</button>
 </form>
 
-<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" 
-        onload="if (submitted) { document.getElementById('formStatus').innerText = '✅ Дані надіслано успішно!'; submitted = false; }">
+<div id="formStatus" style="margin-top: 1em; font-weight: bold; color: green;"></div>
+
+<iframe name="hidden_iframe" style="display:none;"
+        onload="if(submitted){document.getElementById('formStatus').innerText='✅ Надіслано!'; submitted=false;}">
 </iframe>
 
 </body>
