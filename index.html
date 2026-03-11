@@ -1,32 +1,85 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <title>Бронювання</title>
-  <script>
-    // Глобальна змінна
-    var submitted = false;
-  </script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Готель CRM</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<form id="bookingForm"
-      method="POST"
-      action="https://script.google.com/macros/s/AKfycbwQu8Apc5Dsu4DMKJ4-H4726wVKZHRtwHLY-UjSWfP4xdWNZiKeze-khxcKjguiGWfYZg/exec"
-      target="hidden_iframe"
-      onsubmit="submitted=true; document.getElementById('formStatus').innerText='⏳ Надсилаємо...';">
-  <!-- Ваші поля форми тут -->
-  <label>Ім'я</label>
-  <input type="text" name="name" required />
-  
-  <button type="submit">Відправити</button>
-</form>
+<div id="loginScreen" class="screen">
+  <h2>Вхід у систему</h2>
+  <input type="password" id="loginPassword" placeholder="Пароль">
+  <button onclick="login()">Увійти</button>
+  <p id="loginError" class="error"></p>
+</div>
 
-<div id="formStatus" style="margin-top: 1em; font-weight: bold; color: green;"></div>
+<div id="menuScreen" class="screen hidden">
+  <h2>Меню</h2>
+  <button onclick="openScreen('guestScreen')">Новий гість</button>
+  <button onclick="openScreen('roomScreen')">Картка номеру</button>
+  <button onclick="openScreen('serviceScreen')">Послуги</button>
+  <button onclick="openScreen('checkoutScreen')">Виїзд</button>
+  <button onclick="logout()">Вийти</button>
+</div>
 
-<iframe name="hidden_iframe" style="display:none;"
-        onload="if(submitted){document.getElementById('formStatus').innerText='✅ Надіслано!'; submitted=false;}">
-</iframe>
+<!-- Новий гість -->
+<div id="guestScreen" class="screen hidden">
+  <h2>Новий гість</h2>
 
+  <input id="gRoom" type="number" placeholder="Номер кімнати">
+  <input id="gName" type="text" placeholder="ПІБ">
+  <input id="gPhone" type="text" placeholder="Телефон">
+  <input id="gIn" type="date" placeholder="Дата заїзду">
+  <input id="gOut" type="date" placeholder="Дата виїзду">
+  <input id="gCount" type="number" placeholder="Кількість гостей">
+  <textarea id="gNotes" placeholder="Нотатки"></textarea>
+
+  <button onclick="addGuest()">Зберегти</button>
+  <p id="guestStatus"></p>
+  <button onclick="openScreen('menuScreen')">Назад</button>
+</div>
+
+<!-- Картка номеру -->
+<div id="roomScreen" class="screen hidden">
+  <h2>Картка номеру</h2>
+
+  <input id="rRoom" type="number" placeholder="Номер кімнати">
+  <button onclick="loadRoom()">Завантажити</button>
+
+  <div id="roomData"></div>
+
+  <button onclick="openScreen('menuScreen')">Назад</button>
+</div>
+
+<!-- Послуги -->
+<div id="serviceScreen" class="screen hidden">
+  <h2>Додати послугу</h2>
+
+  <input id="sRoom" type="number" placeholder="Номер кімнати">
+  <input id="sGuest" type="text" placeholder="ID гостя">
+  <input id="sName" type="text" placeholder="Назва послуги">
+  <input id="sPrice" type="number" placeholder="Ціна">
+  <input id="sStaff" type="text" placeholder="Працівник">
+
+  <button onclick="addService()">Додати</button>
+  <p id="serviceStatus"></p>
+
+  <button onclick="openScreen('menuScreen')">Назад</button>
+</div>
+
+<!-- Виїзд -->
+<div id="checkoutScreen" class="screen hidden">
+  <h2>Оформити виїзд</h2>
+
+  <input id="cRoom" type="number" placeholder="Номер кімнати">
+  <button onclick="checkout()">Виїзд</button>
+  <p id="checkoutStatus"></p>
+
+  <button onclick="openScreen('menuScreen')">Назад</button>
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
