@@ -59,7 +59,17 @@
 
   <input id="sRoom" type="number" placeholder="Номер кімнати">
   <input id="sGuest" type="text" placeholder="ID гостя">
-  <input id="sName" type="text" placeholder="Назва послуги">
+
+  <!-- Випадаючий список -->
+  <select id="sName" onchange="selectService(this.value)">
+      <option value="">— Оберіть послугу —</option>
+      <option value="Масаж">Масаж</option>
+      <option value="Басейн">Басейн</option>
+      <option value="Велосипед">Велосипед</option>
+      <option value="Теніс">Теніс</option>
+      <option value="Сауна">Сауна</option>
+  </select>
+
   <input id="sPrice" type="number" placeholder="Ціна">
   <input id="sStaff" type="text" placeholder="Працівник">
 
