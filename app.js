@@ -1,100 +1,69 @@
-const API = "https://script.google.com/macros/s/AKfycbxo2mITCJ2-ikdqypEMbcFui1IKWjoJvx7Txt8Hygm100GKjUSJ241Kv6dwxf7EJ1t9/exec";
-const PASSWORD = "hotel123"; // 🔐 Поміняй пароль тут
+/* ============================================================
+   CONFIG
+============================================================ */
+const API_URL = "https://script.google.com/macros/s/AKfycbyfabCaieSX2R--5Vccz2rC6oW7wwPL3YysJK3kfMAgyKu5k1YqUVUzfuE9_dZBg9Dp/exec";
 
-function $(id) { return document.getElementById(id); }
-
-function openScreen(id) {
-  document.querySelectorAll(".screen").forEach(s => s.classList.add("hidden"));
-  $(id).classList.remove("hidden");
-}
-
-function login() {
-  const pass = $("loginPassword").value;
-  if (pass === PASSWORD) openScreen("menuScreen");
-  else $("loginError").textContent = "Неправильний пароль";
-}
-
-function logout() {
-  $("loginPassword").value = "";
-  openScreen("loginScreen");
-}
-
-// ------------------ Новий гість ------------------
+/* ============================================================
+   Add Guest
+============================================================ */
 async function addGuest() {
-  const data = {
+
+  const payload = {
     action: "addGuest",
-    roomNumber: $("gRoom").value,
-    fullName: $("gName").value,
-    phone: $("gPhone").value,
-    checkIn: $("gIn").value,
-    checkOut: $("gOut").value,
-    guestsCount: $("gCount").value,
-    notes: $("gNotes").value
+    RoomNumber: document.getElementById("room").value,
+    FullName: document.getElementById("fullName").value,
+    Phone: document.getElementById("phone").value,
+    CheckIn: document.getElementById("checkIn").value,
+    CheckOut: document.getElementById("checkOut").value,
+    GuestsCount: document.getElementById("guestsCount").value,
+    Notes: document.getElementById("notes").value
   };
 
-  let res = await fetch(API, {
+  const res = await fetch(API_URL, {
     method: "POST",
-    body: JSON.stringify(data)
+    body: JSON.stringify(payload),
+    headers: { "Content-Type": "application/json" }
   });
 
-  let json = await res.json();
-  $("guestStatus").textContent = json.success ? "Збережено!" : "Помилка";
+  const data = await res.json();
+  alert(JSON.stringify(data));
 }
 
-// ------------------ Картка номеру ------------------
-async function loadRoom() {
-  const room = $("rRoom").value;
+/* ============================================================
+   Auto Price Fetch
+============================================================ */
+async function selectService(name) {
 
-  let res = await fetch(API, {
-    method: "POST",
-    body: JSON.stringify({ action: "getRoom", roomNumber: room })
-  });
+  const response = await fetch(
+    `${API_URL}?action=lookupPrice&ServiceName=${encodeURIComponent(name)}`
+  );
+  const data = await response.json();
 
-  let json = await res.json();
-
-  let html = "<h3>Гості</h3>";
-  json.guests.forEach(g => {
-    html += `<p><b>${g.name}</b><br>📞 ${g.phone}<br>ID: ${g.id}</p>`;
-  });
-
-  html += "<h3>Послуги</h3>";
-  json.services.forEach(s => {
-    html += `<p>${s.date}: ${s.service} (${s.price} грн) — ${s.staff}</p>`;
-  });
-
-  $("roomData").innerHTML = html;
+  if (data.DefaultPrice) {
+    document.getElementById("servicePrice").value = data.DefaultPrice;
+  }
 }
 
-// ------------------ Послуги ------------------
+/* ============================================================
+   Add Service
+============================================================ */
 async function addService() {
-  const data = {
+
+  const payload = {
     action: "addService",
-    roomNumber: $("sRoom").value,
-    guestId: $("sGuest").value,
-    serviceName: $("sName").value,
-    price: $("sPrice").value,
-    date: new Date().toISOString().split("T")[0],
-    staff: $("sStaff").value
+    RoomNumber: document.getElementById("serviceRoom").value,
+    GuestID: document.getElementById("guestId").value,
+    ServiceName: document.getElementById("serviceName").value,
+    Price: document.getElementById("servicePrice").value,
+    Staff: document.getElementById("staffName").value
   };
 
-  let res = await fetch(API, {
+  const res = await fetch(API_URL, {
     method: "POST",
-    body: JSON.stringify(data)
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
   });
 
-  let json = await res.json();
-  $("serviceStatus").textContent = json.success ? "Додано!" : "Помилка";
-}
-
-// ------------------ Виїзд ------------------
-async function checkout() {
-  const room = $("cRoom").value;
-
-  let res = await fetch(API, {
-    method: "POST",
-    body: JSON.stringify({ action: "checkoutGuest", roomNumber: room })
-  });
-
-  let json = await res.json();
-  $("checkoutStatus").textContent = json.success ? "Гості виселені!" : "Помилка";
+  const data = await res.json();
+  alert(JSON.stringify(data));
 }
