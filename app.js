@@ -1,22 +1,60 @@
 /* ============================================================
    CONFIG
 ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbyfabCaieSX2R--5Vccz2rC6oW7wwPL3YysJK3kfMAgyKu5k1YqUVUzfuE9_dZBg9Dp/exec";
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbyfabCaieSX2R--5Vccz2rC6oW7wwPL3YysJK3kfMAgyKu5k1YqUVUzfuE9_dZBg9Dp/exec";
+
+const SYSTEM_PASSWORD = "24Bua";   // твоє: 1. 24  2. B  3. ua
 
 /* ============================================================
-   Add Guest
+   LOGIN SYSTEM
+============================================================ */
+
+function login() {
+  const pass = document.getElementById("loginPassword").value;
+
+  if (pass === SYSTEM_PASSWORD) {
+    localStorage.setItem("hotelLogged", "1");
+    openScreen("menuScreen");
+  } else {
+    document.getElementById("loginError").innerText = "Невірний пароль";
+  }
+}
+
+function logout() {
+  localStorage.removeItem("hotelLogged");
+  openScreen("loginScreen");
+}
+
+window.onload = function () {
+  if (localStorage.getItem("hotelLogged") === "1") {
+    openScreen("menuScreen");
+  } else {
+    openScreen("loginScreen");
+  }
+};
+
+/* ============================================================
+   SCREEN SWITCHING
+============================================================ */
+function openScreen(id) {
+  document.querySelectorAll(".screen").forEach((s) => s.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+}
+
+/* ============================================================
+   ADD GUEST
 ============================================================ */
 async function addGuest() {
-
   const payload = {
     action: "addGuest",
-    RoomNumber: document.getElementById("room").value,
-    FullName: document.getElementById("fullName").value,
-    Phone: document.getElementById("phone").value,
-    CheckIn: document.getElementById("checkIn").value,
-    CheckOut: document.getElementById("checkOut").value,
-    GuestsCount: document.getElementById("guestsCount").value,
-    Notes: document.getElementById("notes").value
+    RoomNumber: document.getElementById("gRoom").value,
+    FullName: document.getElementById("gName").value,
+    Phone: document.getElementById("gPhone").value,
+    CheckIn: document.getElementById("gIn").value,
+    CheckOut: document.getElementById("gOut").value,
+    GuestsCount: document.getElementById("gCount").value,
+    Notes: document.getElementById("gNotes").value
   };
 
   const res = await fetch(API_URL, {
@@ -26,44 +64,60 @@ async function addGuest() {
   });
 
   const data = await res.json();
-  alert(JSON.stringify(data));
+  document.getElementById("guestStatus").innerText = data.message || "Готово!";
 }
 
 /* ============================================================
-   Auto Price Fetch
+   LOAD ROOM DATA
 ============================================================ */
-async function selectService(name) {
+async function loadRoom() {
+  const room = document.getElementById("rRoom").value;
 
-  const response = await fetch(
-    `${API_URL}?action=lookupPrice&ServiceName=${encodeURIComponent(name)}`
-  );
-  const data = await response.json();
+  const res = await fetch(`${API_URL}?action=roomCard&Room=${room}`);
+  const data = await res.json();
 
-  if (data.DefaultPrice) {
-    document.getElementById("servicePrice").value = data.DefaultPrice;
-  }
+  document.getElementById("roomData").innerHTML =
+    `<pre>${JSON.stringify(data, null, 2)}</pre>`;
 }
 
 /* ============================================================
-   Add Service
+   ADD SERVICE
 ============================================================ */
 async function addService() {
-
   const payload = {
     action: "addService",
-    RoomNumber: document.getElementById("serviceRoom").value,
-    GuestID: document.getElementById("guestId").value,
-    ServiceName: document.getElementById("serviceName").value,
-    Price: document.getElementById("servicePrice").value,
-    Staff: document.getElementById("staffName").value
+    RoomNumber: document.getElementById("sRoom").value,
+    GuestID: document.getElementById("sGuest").value,
+    ServiceName: document.getElementById("sName").value,
+    Price: document.getElementById("sPrice").value,
+    Staff: document.getElementById("sStaff").value
   };
 
   const res = await fetch(API_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
+    headers: { "Content-Type": "application/json" }
   });
 
   const data = await res.json();
-  alert(JSON.stringify(data));
+  document.getElementById("serviceStatus").innerText = data.message || "Додано!";
+}
+
+/* ============================================================
+   CHECKOUT
+============================================================ */
+async function checkout() {
+  const payload = {
+    action: "checkout",
+    RoomNumber: document.getElementById("cRoom").value
+  };
+
+  const res = await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: { "Content-Type": "application/json" }
+  });
+
+  const data = await res.json();
+  document.getElementById("checkoutStatus").innerText = data.message || "Готово!";
 }
