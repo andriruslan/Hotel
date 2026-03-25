@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbyfabCaieSX2R--5Vccz2rC6oW7wwPL3YysJK3kfMAgyKu5k1YqUVUzfuE9_dZBg9Dp/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyvJ2v_B5yzopkZxNRPxVdgjtjtFTg3OQj-ZZst4ZhmJAKn3UnMY2x__I2egLoUmby1/exec";
 const SYSTEM_PASSWORD = "24Bua";
 
 function login() {
