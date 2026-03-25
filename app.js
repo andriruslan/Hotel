@@ -2,7 +2,7 @@
    CONFIG
 ============================================================ */
 const API_URL =
-  "https://script.google.com/macros/s/AKfycbyfabCaieSX2R--5Vccz2rC6oW7wwPL3YysJK3kfMAgyKu5k1YqUVUzfuE9_dZBg9Dp/exec";
+  "https://script.google.com/macros/s/AKfycbxntiKCw1fRoPGtZ9JCIreOnzRnfg_rZs4fdjW0Tyfi4sh7zv3-XyZr6phEWpaVdIpT/exec";
 
 const SYSTEM_PASSWORD = "24Bua";   // твоє: 1. 24  2. B  3. ua
 
