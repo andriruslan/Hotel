@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Готель CRM</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Готель CRM</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <div id="loginScreen" class="screen">
@@ -24,10 +24,8 @@
   <button onclick="logout()">Вийти</button>
 </div>
 
-<!-- Новий гість -->
 <div id="guestScreen" class="screen hidden">
   <h2>Новий гість</h2>
-
   <input id="gRoom" type="number" placeholder="Номер кімнати">
   <input id="gName" type="text" placeholder="ПІБ">
   <input id="gPhone" type="text" placeholder="Телефон">
@@ -35,58 +33,45 @@
   <input id="gOut" type="date" placeholder="Дата виїзду">
   <input id="gCount" type="number" placeholder="Кількість гостей">
   <textarea id="gNotes" placeholder="Нотатки"></textarea>
-
   <button onclick="addGuest()">Зберегти</button>
   <p id="guestStatus"></p>
   <button onclick="openScreen('menuScreen')">Назад</button>
 </div>
 
-<!-- Картка номеру -->
 <div id="roomScreen" class="screen hidden">
   <h2>Картка номеру</h2>
-
   <input id="rRoom" type="number" placeholder="Номер кімнати">
   <button onclick="loadRoom()">Завантажити</button>
-
   <div id="roomData"></div>
-
   <button onclick="openScreen('menuScreen')">Назад</button>
 </div>
 
-<!-- Послуги -->
 <div id="serviceScreen" class="screen hidden">
   <h2>Додати послугу</h2>
-
   <input id="sRoom" type="number" placeholder="Номер кімнати">
   <input id="sGuest" type="text" placeholder="ID гостя">
 
-  <!-- Випадаючий список -->
   <select id="sName" onchange="selectService(this.value)">
-      <option value="">— Оберіть послугу —</option>
-      <option value="Масаж">Масаж</option>
-      <option value="Басейн">Басейн</option>
-      <option value="Велосипед">Велосипед</option>
-      <option value="Теніс">Теніс</option>
-      <option value="Сауна">Сауна</option>
+    <option value="">— Оберіть послугу —</option>
+    <option value="Масаж">Масаж</option>
+    <option value="Басейн">Басейн</option>
+    <option value="Велосипед">Велосипед</option>
+    <option value="Теніс">Теніс</option>
+    <option value="Сауна">Сауна</option>
   </select>
 
   <input id="sPrice" type="number" placeholder="Ціна">
   <input id="sStaff" type="text" placeholder="Працівник">
-
   <button onclick="addService()">Додати</button>
   <p id="serviceStatus"></p>
-
   <button onclick="openScreen('menuScreen')">Назад</button>
 </div>
 
-<!-- Виїзд -->
 <div id="checkoutScreen" class="screen hidden">
   <h2>Оформити виїзд</h2>
-
   <input id="cRoom" type="number" placeholder="Номер кімнати">
   <button onclick="checkout()">Виїзд</button>
   <p id="checkoutStatus"></p>
-
   <button onclick="openScreen('menuScreen')">Назад</button>
 </div>
 
